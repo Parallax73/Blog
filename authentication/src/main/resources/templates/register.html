@@ -1,0 +1,73 @@
+<HTML lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+
+    <title>Register</title>
+    <h1>Create an account</h1>
+</head>
+<body>
+
+<form method="post" name="myForm" action="/register">
+    <div class="mb-3">
+        <label for="userEmailInput">Email:</label>
+        <input type="email" class="form-control" name="email" id="userEmailInput" placeholder="Enter your email">
+        <small id="text" class="form-text text-muted"></small>
+    </div>
+    <div>
+        <label for="userPasswordInput">Password:</label>
+        <input type="password" class="form-control" name="password" id="userPasswordInput" placeholder="Enter your email">
+        <small id="text1" class="form-text text-muted"></small>
+    </div>
+    <button type="submit" class="btn btn-primary">Register</button>
+    <a id="textHolder"></a>
+    <a id = "logInT" href="/home">If you have an account, login here</a>
+</form>
+<script>
+function registerUser() {
+
+    var userEmailInput = document.getElementById("userEmailInput").value;
+    var userPasswordInput = document.getElementById("userPasswordInput").value;
+    var textHolder = document.getElementById("textHolder");
+    var logInT = document.getElementById("logInT");
+
+    fetch("/register", {
+        method: "POST",
+        body: JSON.stringify({email: userEmailInput, password: userPasswordInput}),
+        headers: {
+            "Content-Type": "application/json",
+        },
+    })
+
+        .then(response => {
+            if (response.status === 200) {
+                textHolder.innerHTML = "Account created with success"
+                logInT.innerHTML = "Login here"
+            } else if (response.status === 500) {
+                textHolder.innerHTML = "Account with email: " + userEmailInput + "Already exists"
+            } else {
+                textHolder.innerHTML = "Something wrong happened"
+            }
+        }).catch(err => {
+        console.log('Error', err);
+    });
+}
+
+    document.querySelector('form[name="myForm"]').addEventListener('submit', function (event) {
+        event.preventDefault();
+        registerUser();
+    });
+
+
+
+
+</script>
+
+
+</body>
+</HTML>
