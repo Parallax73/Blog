@@ -1,49 +1,44 @@
 package br.com.blog.posts.service;
 
 
-import br.com.blog.authentication.config.security.TokenService;
+import br.com.blog.core.service.AuthorService;
 import br.com.blog.posts.dto.EditDTO;
 import br.com.blog.posts.dto.PostDTO;
 import br.com.blog.posts.entity.Post;
 import br.com.blog.posts.repository.PostRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
-@Import(br.com.blog.authentication.config.security.TokenService.class)
+@Slf4j
+@Import(br.com.blog.core.service.AuthorService.class)
 public class PostService {
 
-/*
-    1- Criar post (id, texto, data criação e autor)
-    2- listar posts
-    3- editar posts
-    4- apagar posts
-  */
 
-    @Autowired
-    TokenService service;
-
-    @Autowired
+    final
     PostRepository repository;
 
+    final AuthorService authorService;
+
+    public PostService(PostRepository repository, AuthorService authorService) {
+        this.repository = repository;
+        this.authorService = authorService;
+    }
 
 
     public ResponseEntity<?> createPost(PostDTO dto){
-        if (service.getToken().length()<15 || service.getToken()==null){
-            return ResponseEntity.badRequest().build();
-        }
         try {
             var post = new Post(dto);
-            post.setAuthor(service.getSubject(service.getToken()));
-            repository.save(post);
+            post.setAuthor("dasilva@gmail.com");
+            repository.save(new Post(dto));
             return ResponseEntity.ok().build();
-        } catch (Exception e){
-            return ResponseEntity.badRequest().body(e.getMessage());
+         } catch (Exception e){
+            log.info(e.getMessage());
+            return ResponseEntity.badRequest().body(e);
         }
     }
 
@@ -81,7 +76,4 @@ public class PostService {
         }
     }
 
-    public void token(){
-        service.getToken();
-    }
 }
