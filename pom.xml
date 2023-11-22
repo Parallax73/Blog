@@ -16,7 +16,6 @@
     <modules>
         <module>authentication</module>
         <module>discovery</module>
-        <module>config-server</module>
         <module>gateway</module>
         <module>posts</module>
     </modules>
