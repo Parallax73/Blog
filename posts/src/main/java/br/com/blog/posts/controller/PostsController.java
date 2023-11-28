@@ -2,13 +2,12 @@ package br.com.blog.posts.controller;
 
 import br.com.blog.posts.dto.PostDTO;
 import br.com.blog.posts.service.PostService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 @RestController
-@Slf4j
-@RequestMapping("/api/posts")
+@RequestMapping("/api/post")
 public class PostsController {
 
     final
@@ -19,15 +18,19 @@ public class PostsController {
         this.service = service;
     }
 
-    @PostMapping("/create-post")
-    @Transactional
-    public void createPost(@RequestBody PostDTO dto){
-        service.createPost(dto);
+    @GetMapping("profile")
+    public ModelAndView profile(){
+        return new ModelAndView("profile");
     }
+
+
 
     @GetMapping("/teste")
     public void teste(){
-        log.info("funcionou");
+        System.out.println("SDIFKHJAOPSDIGHJ");
     }
+
+
+
 
 }

@@ -1,18 +1,16 @@
 package br.com.blog.posts.entity;
 
 import br.com.blog.posts.dto.PostDTO;
-import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 
-@Table(name = "Posts")
-@Entity(name = "Post")
+@Document
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,7 +22,7 @@ public class Post {
     private String text;
     private LocalDateTime dateTime;
     private String author;
-
+    private String tags;
 
 
     public Post(PostDTO post){
