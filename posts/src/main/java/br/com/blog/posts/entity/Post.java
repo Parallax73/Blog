@@ -1,14 +1,15 @@
 package br.com.blog.posts.entity;
 
+import br.com.blog.posts.dto.EditDTO;
 import br.com.blog.posts.dto.PostDTO;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Document
 @Getter
@@ -17,12 +18,11 @@ import java.time.LocalDateTime;
 public class Post {
 
     @Id
-    @GeneratedValue
-    private Long id;
+    private String id;
     private String text;
     private LocalDateTime dateTime;
     private String author;
-    private String tags;
+    private List<String> tags;
 
 
     public Post(PostDTO post){
@@ -30,8 +30,8 @@ public class Post {
         this.dateTime= LocalDateTime.now();
     }
 
-    public void editPost(String text){
-        this.text = text;
+    public void editPost(EditDTO dto){
+        this.text = dto.text();
         this.dateTime  = LocalDateTime.now();
     }
 

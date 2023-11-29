@@ -1,13 +1,16 @@
 package br.com.blog.posts.controller;
 
-import br.com.blog.posts.dto.PostDTO;
+
+import br.com.blog.posts.dto.EditDTO;
 import br.com.blog.posts.service.PostService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 @RestController
 @RequestMapping("/api/post")
+@Slf4j
 public class PostsController {
 
     final
@@ -18,19 +21,30 @@ public class PostsController {
         this.service = service;
     }
 
-    @GetMapping("profile")
+    @GetMapping
+    public ModelAndView main(){
+        return new ModelAndView("index");
+    }
+
+    @GetMapping("/profile")
     public ModelAndView profile(){
-        return new ModelAndView("profile");
+        ModelAndView mv = new ModelAndView("index");
+        mv.addObject("post",service.listAllPosts());
+        return mv;
     }
 
 
 
-    @GetMapping("/teste")
+    @PostMapping("/teste")
+    @Transactional
     public void teste(){
-        System.out.println("SDIFKHJAOPSDIGHJ");
+        service.createPost();
+        log.info("CRIADO COM SUCESSO");
     }
 
-
-
-
+    @PatchMapping
+    @Transactional
+    public void editPost(String id, EditDTO dto){
+        service.editPost(id,dto);
+    }
 }
