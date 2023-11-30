@@ -37,6 +37,19 @@ public class PostService {
     }
 
     public List<Post> listAllPosts(){
-        return repository.findAll();
+        return repository.findAllByOrderByDateTimeAsc();
+    }
+
+    public ResponseEntity<?> deletePost(String id){
+        log.info("delete called");
+        try {
+            var post = repository.findById(id);
+            if (post.isPresent()){
+                repository.deleteById(id);
+            }
+            return ResponseEntity.ok().build();
+        } catch (Exception e){
+            return ResponseEntity.internalServerError().build();
+        }
     }
 }

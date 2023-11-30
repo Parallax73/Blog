@@ -3,14 +3,15 @@ package br.com.blog.posts.controller;
 
 import br.com.blog.posts.dto.EditDTO;
 import br.com.blog.posts.service.PostService;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+
+
 @RestController
 @RequestMapping("/api/post")
-@Slf4j
 public class PostsController {
 
     final
@@ -22,7 +23,7 @@ public class PostsController {
     }
 
     @GetMapping
-    public ModelAndView main(){
+    public ModelAndView home(){
         return new ModelAndView("index");
     }
 
@@ -34,12 +35,10 @@ public class PostsController {
     }
 
 
-
     @PostMapping("/teste")
     @Transactional
     public void teste(){
         service.createPost();
-        log.info("CRIADO COM SUCESSO");
     }
 
     @PatchMapping
@@ -47,4 +46,12 @@ public class PostsController {
     public void editPost(String id, EditDTO dto){
         service.editPost(id,dto);
     }
+
+    @DeleteMapping("/delete/{id}")
+    @Transactional
+    public ResponseEntity<?> deletePost(@PathVariable("id") String id){
+        return service.deletePost(id);
+    }
+
+
 }

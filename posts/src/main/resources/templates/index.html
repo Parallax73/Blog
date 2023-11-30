@@ -5,10 +5,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
-    <link rel="stylesheet" th:href="@{/style.css}">
+
     <title>Profile</title>
     <style>
 
+        body {
+            padding: 10px
+        }
         .small-form {
             width: 450px;
             float: left;
@@ -60,10 +63,40 @@
         <td data-th-text="${post.author}"></td>
         <td data-th-text="${post.dateTime}"></td>
         <td>
-            <a th:href="@{'/delete/'+${post.id}}">Delete</a>
+            <a th:href="@{'#'}" th:attr="data-post-id=${post.id}" class="delete-button">Delete</a>
+
         </td>
     </tr>
     </tbody>
 </table>
+
+<script>
+    async function resetPage(postId) {
+        try {
+            const response = await fetch(`/api/post/delete/${postId}`, {
+                method: 'DELETE',
+            });
+
+            if (response.ok) {
+                location.reload();
+            } else {
+                console.error('Failed to delete the post');
+            }
+        } catch (error) {
+            console.error('Error occurred during the deletion process:', error);
+        }
+    }
+
+
+    document.querySelectorAll('.delete-button').forEach(function(button) {
+        button.addEventListener('click', function(event) {
+            event.preventDefault();
+            var postId = this.getAttribute('data-post-id');
+            resetPage(postId);
+        });
+    });
+</script>
+
+
 </body>
 </html>

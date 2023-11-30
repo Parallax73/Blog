@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Document
@@ -20,19 +20,19 @@ public class Post {
     @Id
     private String id;
     private String text;
-    private LocalDateTime dateTime;
+    private LocalDate dateTime;
     private String author;
     private List<String> tags;
 
 
     public Post(PostDTO post){
         this.text= post.text();
-        this.dateTime= LocalDateTime.now();
+        this.dateTime = LocalDate.now();
     }
 
     public void editPost(EditDTO dto){
         this.text = dto.text();
-        this.dateTime  = LocalDateTime.now();
+        this.dateTime = LocalDate.now();
     }
 
     public void setAuthor(String author){
