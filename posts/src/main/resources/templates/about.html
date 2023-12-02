@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>About</title>
+    <link
+            rel="stylesheet"
+            href="https://unpkg.com/98.css"
+    >
+</head>
+<style>
+    body{
+        background-image: url("Clouds.png");
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+    .window-body{
+        width: 400px;
+        height: 300px;
+    }
+    .textarea{
+        width: 380px;
+        height: 270px;
+    }
+</style>
+<body>
+    <div class="window">
+        <div class="title-bar">
+            <div class="title-bar-text">About - Notepad</div>
+            <div class="title-bar-controls">
+                <button aria-label="Minimize"></button>
+                <button aria-label="Maximize"></button>
+                <button aria-label="Close"></button>
+            </div>
+        </div>
+        <div class="window-body">
+            <p>File Edit Search Help</p>
+            <textarea class="textarea">
+            Hello!
+
+            -------------------------------------------------------
+            You can find more information about the project here:
+            github.com/Parallax73/Blog
+            -------------------------------------------------------
+            </textarea>
+        </div>
+    </div>
+</body>
+</html>

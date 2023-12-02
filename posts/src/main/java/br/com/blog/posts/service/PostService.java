@@ -19,8 +19,9 @@ public class PostService {
     @Autowired
     PostRepository repository;
 
-    public ResponseEntity<?> createPost(){
-        var post = new Post(new PostDTO("test text"));
+    public ResponseEntity<?> createPost(PostDTO dto){
+        var post = new Post(dto);
+        log.info("Tried to create a post");
         post.setAuthor("dasilva@gmail.com");
         repository.insert(post);
         return ResponseEntity.ok().build();

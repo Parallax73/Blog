@@ -2,6 +2,7 @@ package br.com.blog.posts.controller;
 
 
 import br.com.blog.posts.dto.EditDTO;
+import br.com.blog.posts.dto.PostDTO;
 import br.com.blog.posts.service.PostService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,7 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 
 @RestController
-@RequestMapping("/api/post")
+@RequestMapping("/post")
 public class PostsController {
 
     final
@@ -22,23 +23,19 @@ public class PostsController {
         this.service = service;
     }
 
-    @GetMapping
-    public ModelAndView home(){
-        return new ModelAndView("index");
-    }
+    
 
-    @GetMapping("/profile")
+    @GetMapping("/home")
     public ModelAndView profile(){
         ModelAndView mv = new ModelAndView("index");
         mv.addObject("post",service.listAllPosts());
         return mv;
     }
 
-
-    @PostMapping("/teste")
+    @PostMapping("/create-post")
     @Transactional
-    public void teste(){
-        service.createPost();
+    public void createPost(@RequestBody PostDTO dto){
+        service.createPost(dto);
     }
 
     @PatchMapping
