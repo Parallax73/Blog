@@ -53,4 +53,26 @@ public class PostService {
             return ResponseEntity.internalServerError().build();
         }
     }
+
+    public ResponseEntity<?> getPostById(String id){
+        try{
+            var post = repository.findById(id);
+            if (post.isPresent()){
+                return ResponseEntity.ok().body(post);
+            }
+        } catch (Exception e){
+            return ResponseEntity.internalServerError().body(new Exception(e));
+        }
+        return ResponseEntity.internalServerError().build();
+    }
+
+    public ResponseEntity<?> getPostByUser(String user){
+        try{
+            var post = repository.findAllByAuthor(user);
+            return ResponseEntity.ok().body(post);
+
+        } catch (Exception e){
+            return ResponseEntity.internalServerError().body(new Exception(e));
+        }
+    }
 }
