@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -54,25 +55,15 @@ public class PostService {
         }
     }
 
-    public ResponseEntity<?> getPostById(String id){
+    public Optional<Post> getPostById(String id){
         try{
             var post = repository.findById(id);
             if (post.isPresent()){
-                return ResponseEntity.ok().body(post);
+                return post;
             }
         } catch (Exception e){
-            return ResponseEntity.internalServerError().body(new Exception(e));
+            return null;
         }
-        return ResponseEntity.internalServerError().build();
-    }
-
-    public ResponseEntity<?> getPostByUser(String user){
-        try{
-            var post = repository.findAllByAuthor(user);
-            return ResponseEntity.ok().body(post);
-
-        } catch (Exception e){
-            return ResponseEntity.internalServerError().body(new Exception(e));
-        }
+        return null;
     }
 }

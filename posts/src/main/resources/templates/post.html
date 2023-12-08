@@ -4,8 +4,6 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link type="text/css" th:href="@{/css/styles.css}" rel="stylesheet"/>
-  <script type="text/javascript" th:src="@{/js/actions.js}"></script>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
   <link
           rel="stylesheet"
@@ -14,7 +12,7 @@
   <title>Post</title>
   <style>
     body {
-      background-image: url("Clouds.png");
+      background-image: url("https://cdn.discordapp.com/attachments/821189072709615630/1182732240023715891/Clouds.png?ex=6585c43c&is=65734f3c&hm=a90b09c651c6ce9cd263ae2b52e0fb7f97194429f753d9ee4c81f23de9d4c754&");
       position: relative;
       display: flex;
       justify-content: center;
@@ -69,7 +67,7 @@
       overflow: hidden;
       position: relative;
     }
-    .post-table {
+    /*.post-table {
       display: flex;
       flex-direction: row;
       align-items: flex-start;
@@ -85,7 +83,7 @@
       text-overflow: ellipsis;
       max-width: 75ch;
       min-width: 30ch;
-    }
+    }*/
 
   </style>
 </head>
@@ -127,15 +125,26 @@
       <label class="textarea-address" tabindex="-1">Adress</label>
       <textarea class="textarea" readonly tabindex="-1">www.post.com</textarea>
     </div>
-    <table class="post-table" style="width: 735px; height: 500px; margin-top: 10px;  align-self: center">
-      <tbody>
-      <a href="/home">Homepage</a>
-      <tr data-th-each="post : ${post}">
-        <td><textarea id="text-data"  data-th-text="${post.text}" style="width: 740px; height: 500px;  align-self: center; font-size: 14px"></textarea> </td>
-      </tr>
-      </tbody>
-    </table>
+    <a id="var-text" href="#" style="font-size: 14px"></a>
+      <textarea id="txtarea" data-th-text="${postText}"  style="width: 740px; height: 450px;  align-self: center; font-size: 14px"></textarea>
   </div>
 </div>
 </body>
+<script th:inline="javascript">
+  let btntxt = /*[[${buttontxt}]]*/ 'default';
+  let vartxt = document.getElementById("var-text");
+  let textarea = document.getElementById("txtarea");
+
+
+  switch (btntxt){
+    case "Homepage":
+      vartxt.innerText=btntxt;
+      vartxt.href = "home";
+      textarea.readOnly=true;
+    case "Edit post":
+      vartxt.innerText=btntxt;
+  }
+
+
+</script>
 </html>

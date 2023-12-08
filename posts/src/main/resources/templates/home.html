@@ -14,7 +14,7 @@
     <title>Home</title>
     <style>
         body {
-            background-image: url("Clouds.png");
+            background-image: url("https://cdn.discordapp.com/attachments/821189072709615630/1182732240023715891/Clouds.png?ex=6585c43c&is=65734f3c&hm=a90b09c651c6ce9cd263ae2b52e0fb7f97194429f753d9ee4c81f23de9d4c754&");
             position: relative;
             display: flex;
             justify-content: center;
@@ -78,14 +78,6 @@
             position: relative;
             font-size: 14px;
         }
-        .post-text{
-            display:inline-block;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 75ch;
-            min-width: 30ch;
-        }
 
     </style>
 </head>
@@ -131,17 +123,29 @@
             <tbody>
             <a href="">Your profile</a>
             <tr data-th-each="post : ${post}">
-                <!--
-                <td><a class="post-text" href="/post/${post.id}" data-th-test="${post.text}"></a></td>
-                <td data-th-text="by ${post.author}"></td>
-                <td data-th-text="${post.dateTime}"></td>-->
-                <td><a class="post-text" href="/post?id=${post.id}">texto da silva satotexto da silva satotexto da silva satotexto da silva satotexto da silva sato</a></td>
-                <td>by <u>dasilva123</u></td>
-                <td>12-05-2023</td>
+                <td class="clickableCell" th:attr="data-post-id=${post.id}" data-th-text="${post.text}" style="cursor: pointer; text-decoration: underline;"></td>
+                <td data-th-text="${post.author}"></td>
+                <td data-th-text="${post.dateTime}"></td>
             </tr>
             </tbody>
         </table>
     </div>
 </div>
 </body>
+<script>
+
+
+
+
+    document.querySelectorAll(".clickableCell").forEach(function (clickCell) {
+        clickCell.addEventListener("click", function (event) {
+            let postId = clickCell.getAttribute("data-post-id");
+            sendToPost(postId);
+        });
+    });
+    function sendToPost(postId) {
+        location.href = "/post/" + postId;
+    }
+
+</script>
 </html>
