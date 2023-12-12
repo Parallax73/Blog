@@ -30,10 +30,6 @@ public class Post {
         this.dateTime = LocalDate.now();
     }
 
-    public void editPost(EditDTO dto){
-        this.text = dto.text();
-        this.dateTime = LocalDate.now();
-    }
 
     public void setAuthor(String author){
         this.author=author;

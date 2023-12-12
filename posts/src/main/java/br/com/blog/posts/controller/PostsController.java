@@ -4,6 +4,7 @@ package br.com.blog.posts.controller;
 import br.com.blog.posts.dto.EditDTO;
 import br.com.blog.posts.dto.PostDTO;
 import br.com.blog.posts.service.PostService;
+import jakarta.ws.rs.Path;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,10 +43,12 @@ public class PostsController {
         service.createPost(dto);
     }
 
-    @PatchMapping
+
+    @PatchMapping("{id}/edit-post")
     @Transactional
-    public void editPost(String id, EditDTO dto){
+    public void editPost(@PathVariable("id") String id, @RequestBody EditDTO dto){
         service.editPost(id,dto);
+        log.info("edit-post was called");
     }
 
     @DeleteMapping("/delete/{id}")
@@ -57,14 +60,16 @@ public class PostsController {
     @GetMapping("/{id}")
     public ModelAndView getPost(@PathVariable("id") String id) {
         ModelAndView mv = new ModelAndView("post");
-        if (service.getPostById(id) != null) {
+        if (service.getPostById(id).isPresent()) {
             mv.addObject("postText", service.getPostById(id).get().getText());
             mv.addObject("buttontxt", "Homepage");
             log.info("found");
             return mv;
         } else {
+            mv.addObject("buttontxt", "Homepage");
+            mv.addObject("postText", null);
             log.info("Not found :(");
-            return null;
+            return mv;
         }
     }
 
@@ -78,17 +83,26 @@ public class PostsController {
     @GetMapping("/create")
     public ModelAndView create(){
         ModelAndView mv = new ModelAndView("post");
-        mv.addObject("msg", "Create post");
+        mv.addObject("buttontxt", "Create");
+        log.info("create method called");
         return mv;
     }
 
-    /*@GetMapping("/edit")
-    public ModelAndView edit(){
+    @GetMapping("/{id}/edit")
+    public ModelAndView edit(@PathVariable("id") String id){
         ModelAndView mv = new ModelAndView("post");
-        mv.addObject("post",service.)
-        mv.addObject("msg", "Edit post");
-        return mv;
-    }*/
+        if (service.getPostById(id).isPresent()) {
+            var post = service.getPostById(id);
+            mv.addObject("postText", post.get().getText());
+            mv.addObject("postId", post.get().getId());
+            mv.addObject("buttontxt", "Edit");
+            return mv;
+        } else {
+            mv.addObject("buttontxt", "Edit");
+            mv.addObject("postText", null);
+            return mv;
+        }
+    }
 
 
 

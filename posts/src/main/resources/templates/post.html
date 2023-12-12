@@ -21,6 +21,7 @@
     }
 
     .window {
+      border: 2px solid red;
       width: 30%;
       height: 25%;
       overflow: hidden;
@@ -67,23 +68,6 @@
       overflow: hidden;
       position: relative;
     }
-    /*.post-table {
-      display: flex;
-      flex-direction: row;
-      align-items: flex-start;
-      justify-content: flex-start;
-      overflow: hidden;
-      position: relative;
-      font-size: 14px;
-    }
-    .post-text{
-      display:inline-block;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 75ch;
-      min-width: 30ch;
-    }*/
 
   </style>
 </head>
@@ -126,7 +110,7 @@
       <textarea class="textarea" readonly tabindex="-1">www.post.com</textarea>
     </div>
     <a id="var-text" href="#" style="font-size: 14px"></a>
-      <textarea id="txtarea" data-th-text="${postText}"  style="width: 740px; height: 450px;  align-self: center; font-size: 14px"></textarea>
+      <textarea id="txtarea" style="width: 740px; height: 450px;  align-self: center; font-size: 14px"></textarea>
   </div>
 </div>
 </body>
@@ -134,17 +118,85 @@
   let btntxt = /*[[${buttontxt}]]*/ 'default';
   let vartxt = document.getElementById("var-text");
   let textarea = document.getElementById("txtarea");
+  let errorText = "Could not find the post you're trying to reach"
+  let postText = /*[[${postText}]]*/ 'default';
 
 
-  switch (btntxt){
+
+
+
+  switch (btntxt) {
     case "Homepage":
-      vartxt.innerText=btntxt;
+      vartxt.innerText = btntxt;
       vartxt.href = "home";
-      textarea.readOnly=true;
-    case "Edit post":
-      vartxt.innerText=btntxt;
+      if (!postText) {
+        textarea.readOnly = true;
+        textarea.innerText = errorText;
+      } else {
+        textarea.innerText = postText;
+        textarea.readOnly = true;
+      }
+      break;
+    case "Edit":
+      vartxt.innerText = btntxt;
+      if (postText) {
+        textarea.innerText = postText;
+        let postId = /*[[${postId}]]*/ 'default';
+        vartxt.addEventListener("click", function (event) {
+          event.preventDefault();
+          editPost(postId, textarea.value);
+        })
+      } else {
+        textarea.innerText = errorText;
+      }
+      break;
+
+    case "Create":
+      vartxt.innerText = btntxt;
+      vartxt.href = "home";
+      textarea.setAttribute("placeholder", "What do you wanna share about?");
+      vartxt.addEventListener("click", function (event) {
+        event.preventDefault();
+        createPost();
+      })
+      break;
+      }
+
+
+    function createPost() {
+      let textToCreate = textarea.value;
+      console.info(textToCreate);
+      fetch("create-post", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({text: textToCreate})
+      }).then(response => {
+        if (response.status === 200) {
+          location.href = "home";
+        }
+      }).catch(e => {
+        console.error(e);
+      })
+    }
+
+    function editPost(postId, textToEdit) {
+      console.log(textToEdit, "  " + postId );
+      fetch("edit-post", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: postId,
+          text: textToEdit})
+      }).then(response => {
+        if (response.status === 200) {}
+        /*window.location.href = "/post/home"*/
+      }).catch(e => {
+        console.error(e);
+      })
   }
-
-
 </script>
 </html>

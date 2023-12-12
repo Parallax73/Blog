@@ -28,10 +28,9 @@ public class PostService {
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<?> editPost(String id, EditDTO editDTO){
+    public ResponseEntity<?> editPost(String id,EditDTO editDTO){
         try {
-            var post = repository.findById(id).get();
-            post.editPost(editDTO);
+            repository.updateText(id,editDTO.text());
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
         }
@@ -55,15 +54,7 @@ public class PostService {
         }
     }
 
-    public Optional<Post> getPostById(String id){
-        try{
-            var post = repository.findById(id);
-            if (post.isPresent()){
-                return post;
-            }
-        } catch (Exception e){
-            return null;
-        }
-        return null;
+    public Optional<Post> getPostById(String id) {
+        return repository.findById(id);
     }
 }
