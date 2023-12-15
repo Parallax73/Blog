@@ -10,10 +10,23 @@ import java.util.List;
 
 
 public interface PostRepository extends MongoRepository<Post,String> {
+
     List<Post> findAllByOrderByDateTimeAsc();
-    Post findAllByAuthorOrTextOrTags(String user);
+
+    @Query("{'text': {$regex : '?0'}}" +
+            "{'author': {$regex : '?0'}}")
+    List<Post> findAllByAuthorOrTextOrderByDateTimeAsc(String keyword);
+
 
     @Query("{'_id': ?0}")
     @Update("{'$set': {'text': ?1}}")
     void updateText(String id, String updatedText);
+
+    @Query("{'_id': ?0}")
+    @Update("{'$inc': {'upvoteCount': 1}}")
+    void updateUpvote(String id);
+
+    @Query("{'_id': ?0}")
+    @Update("{'$inc': {'downvoteCount': 1}}")
+    void updateDownvote(String id);
 }

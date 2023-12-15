@@ -117,33 +117,52 @@
             <label class="textarea-address" tabindex="-1">Adress</label>
             <textarea class="textarea" readonly tabindex="-1">www.zz.com</textarea>
         </div>
+        <form th:action="@{/post/search}" method="get" style="width: 80%; display: flex; margin: 3px;">
+            <div style="display: flex; align-items: center;">
+                <input id="searchInput" type="text" placeholder="Search" name="keywords" style="margin-right: 4px; width: 200px">
+                <button id="search-btn" type="submit">Search</button>
+            </div>
+        </form>
+
+
         <table class="post-table" style="width: 735px; height: 500px; margin-top: 10px;  align-self: center">
-            <tbody>
             <a href="">Your profile</a>
+            <tbody>
             <tr data-th-each="post : ${post}">
-                <td class="clickableCell" th:attr="data-post-id=${post.id}" data-th-text="${post.text}" style="cursor: pointer; text-decoration: underline;"></td>
-                <td data-th-text="${post.author}"></td>
+                <td  class="clickableCell" th:attr="data-post-id=${post.id}" data-th-text="${post.getSubText()}" style="cursor: pointer; text-decoration: underline;"></td>
+                <td data-th-text="${post.author}" style="cursor: pointer; text-decoration: underline;"></td>
+                <td data-th-text="${post.getVoteCount()}" style="cursor: pointer; text-decoration: underline;"></td>
                 <td data-th-text="${post.dateTime}"></td>
             </tr>
+                <a id="errorA" style="margin: 5px; font-size: 14px; color: crimson; display: none">No results...</a>
             </tbody>
         </table>
     </div>
 </div>
 </body>
 <script>
+    let postList = /*[[${post}]]*/ 'default';
+    let error = document.getElementById("errorA")
 
 
+    if (postList==="null"){
+        error.setAttribute("display", "flex");
+    }
+
+    function search(event) {
+        event.preventDefault(); // Prevent the default form submission behavior
+        let keywords = document.getElementById("searchInput").value;
+        window.location.href = '/search?keywords=' + encodeURIComponent(keywords);
+    }
 
 
     document.querySelectorAll(".clickableCell").forEach(function (clickCell) {
-        clickCell.addEventListener("click", function (event) {
+        clickCell.addEventListener("click", function () {
             let postId = clickCell.getAttribute("data-post-id");
-            sendToPost(postId);
+            location.href = "/post/" + postId;
         });
     });
-    function sendToPost(postId) {
-        location.href = "/post/" + postId;
-    }
+
 
 </script>
 </html>

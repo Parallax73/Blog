@@ -20,12 +20,24 @@ public class PostService {
     @Autowired
     PostRepository repository;
 
-    public ResponseEntity<?> createPost(PostDTO dto){
+    public void createPost(PostDTO dto){
         var post = new Post(dto);
         log.info("Tried to create a post");
-        post.setAuthor("dasilva@gmail.com");
+        post.setAuthor("parallax");
         repository.insert(post);
-        return ResponseEntity.ok().build();
+    }
+
+
+    public void deletePost(String id) throws Exception {
+        log.info("delete called");
+        try {
+            var post = repository.findById(id);
+            if (post.isPresent()){
+                repository.deleteById(id);
+            }
+        } catch (Exception e){
+            throw new Exception(e);
+        }
     }
 
     public ResponseEntity<?> editPost(String id,EditDTO editDTO){
@@ -37,24 +49,37 @@ public class PostService {
         return ResponseEntity.ok().build();
     }
 
+
+
     public List<Post> listAllPosts(){
         return repository.findAllByOrderByDateTimeAsc();
     }
 
-    public ResponseEntity<?> deletePost(String id){
-        log.info("delete called");
-        try {
-            var post = repository.findById(id);
-            if (post.isPresent()){
-                repository.deleteById(id);
-            }
-            return ResponseEntity.ok().build();
-        } catch (Exception e){
-            return ResponseEntity.internalServerError().build();
-        }
-    }
+
 
     public Optional<Post> getPostById(String id) {
         return repository.findById(id);
     }
+
+
+    public List<Post> searchPosts(String searchCon) {
+        try {
+            var posts=repository.findAllByAuthorOrTextOrderByDateTimeAsc(searchCon);
+            if (posts==null||posts.size()==0){
+                return null;
+            }
+            log.info("searching for> {} ", searchCon);
+            return repository.findAllByAuthorOrTextOrderByDateTimeAsc(searchCon);
+        } catch (Exception e){
+            log.error(e.getMessage());
+            return null;
+        }
+    }
+
+    public void upvote(String id){
+        repository.updateUpvote(id);
+        log.info("upvote post with id {}",id);
+    }
+
+
 }

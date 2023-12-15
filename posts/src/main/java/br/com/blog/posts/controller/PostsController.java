@@ -3,14 +3,16 @@ package br.com.blog.posts.controller;
 
 import br.com.blog.posts.dto.EditDTO;
 import br.com.blog.posts.dto.PostDTO;
+import br.com.blog.posts.entity.Post;
 import br.com.blog.posts.service.PostService;
 import jakarta.ws.rs.Path;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
 
 
 @RestController
@@ -26,7 +28,7 @@ public class PostsController {
         this.service = service;
     }
 
-
+    //Thymeleaf endpoints
 
     @GetMapping("/home")
     public ModelAndView profile(){
@@ -35,26 +37,12 @@ public class PostsController {
         return mv;
     }
 
-
-
-    @PostMapping("/create-post")
-    @Transactional
-    public void createPost(@RequestBody PostDTO dto){
-        service.createPost(dto);
-    }
-
-
-    @PatchMapping("{id}/edit-post")
-    @Transactional
-    public void editPost(@PathVariable("id") String id, @RequestBody EditDTO dto){
-        service.editPost(id,dto);
-        log.info("edit-post was called");
-    }
-
-    @DeleteMapping("/delete/{id}")
-    @Transactional
-    public ResponseEntity<?> deletePost(@PathVariable("id") String id){
-        return service.deletePost(id);
+    @GetMapping("/create")
+    public ModelAndView create(){
+        ModelAndView mv = new ModelAndView("post");
+        mv.addObject("buttontxt", "Create");
+        log.info("create method called");
+        return mv;
     }
 
     @GetMapping("/{id}")
@@ -63,6 +51,7 @@ public class PostsController {
         if (service.getPostById(id).isPresent()) {
             mv.addObject("postText", service.getPostById(id).get().getText());
             mv.addObject("buttontxt", "Homepage");
+            mv.addObject("postIdd",service.getPostById(id).get().getId());
             log.info("found");
             return mv;
         } else {
@@ -71,21 +60,6 @@ public class PostsController {
             log.info("Not found :(");
             return mv;
         }
-    }
-
-    /*@GetMapping("/{user}/posts")
-    public ModelAndView profile(@PathVariable("user") String user){
-        ModelAndView mv = new ModelAndView("profile");
-        mv.addObject("post",service.getPostByUser(user));
-        return mv;
-    }*/
-
-    @GetMapping("/create")
-    public ModelAndView create(){
-        ModelAndView mv = new ModelAndView("post");
-        mv.addObject("buttontxt", "Create");
-        log.info("create method called");
-        return mv;
     }
 
     @GetMapping("/{id}/edit")
@@ -106,5 +80,37 @@ public class PostsController {
 
 
 
+    //api endpoints
+    @PostMapping("/create-post")
+    @Transactional
+    public void createPost(@RequestBody PostDTO dto){
+        service.createPost(dto);
+        log.info("Created a new post");
+    }
+    @PatchMapping("{id}/edit-post")
+    @Transactional
+    public void editPost(@PathVariable("id") String id, @RequestBody EditDTO dto){
+        service.editPost(id,dto);
+        log.info("edit-post was called");
+    }
+
+    @DeleteMapping("/delete/{id}")
+    @Transactional
+    public void deletePost(@PathVariable("id") String id) throws Exception {
+        service.deletePost(id);
+        log.info("Delete the post: {}",id);
+    }
+
+    @GetMapping("/search")
+    public ModelAndView search(@RequestParam("keywords") String keywords) {
+        ModelAndView mv = new ModelAndView("home");
+        mv.addObject("post", service.searchPosts(keywords));
+        return mv;
+    }
+
+    @PatchMapping("/upvote/{id}")
+    public void upvote(@PathVariable("id") String id){
+        service.upvote(id);
+    }
 
 }

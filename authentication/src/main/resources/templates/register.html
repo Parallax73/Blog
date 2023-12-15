@@ -1,73 +1,144 @@
-<HTML lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
-
     <title>Register</title>
-    <h1>Create an account</h1>
+  <link
+          rel="stylesheet"
+          href="https://unpkg.com/98.css"
+  >
 </head>
+<style>
+  body {
+    background-color: #008080;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+  .window{
+    font-size: 12px;
+    margin-bottom: 50px;
+  }
+
+  .window {
+    width: 400px;
+    height: 450px;
+    position: absolute;
+  }
+
+  .window-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .input-email,
+  .input-username,
+  .input-password {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 375px;
+    height: 30px;
+    padding: 5px;
+    margin-bottom: 35px;
+
+  }
+  .input-email{
+    margin-top: 70px;
+  }
+  .label-username,
+  .label-password,
+  .label-email{
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-right: 325px;
+    font-size: 12px;
+  }
+  .label-email{
+    margin-bottom: 175px;
+    margin-left: -20px;
+  }
+  .label-username{
+    margin-bottom: 60px;
+  }
+  .label-password{
+    margin-bottom: -50px;
+  }
+</style>
 <body>
-
-<form method="post" name="myForm" action="/register">
-    <div class="mb-3">
-        <label for="userEmailInput">Email:</label>
-        <input type="email" class="form-control" name="email" id="userEmailInput" placeholder="Enter your email">
-        <small id="text" class="form-text text-muted"></small>
+  <div class="window">
+    <div class="title-bar">
+      <div class="title-bar-text">Register</div>
+      <div class="title-bar-controls">
+        <button aria-label="Help" onclick="sendToAbout()"></button>
+      </div>
     </div>
-    <div>
-        <label for="userPasswordInput">Password:</label>
-        <input type="password" class="form-control" name="password" id="userPasswordInput" placeholder="Enter your email">
-        <small id="text1" class="form-text text-muted"></small>
+    <div class="window-body">
+
+      <label class="label-email">Email:</label>
+      <label class="label-username">Username:</label>
+      <label class="label-password">Password:</label>
+
+      <input id="emailInput" class="input-email" type="text" placeholder="Your email">
+      <input id="userInput" class="input-username" type="text" placeholder="Your username">
+      <input id="passInput" class="input-password" type="password" placeholder="Your password">
+
+      <button type="submit" class="register-btn">Register account</button>
+
+      <p>
+        Already have an account?
+        <a href="/auth/login">Login here</a>
+      </p>
+      <div class="overlay">
+
+      </div>
     </div>
-    <button type="submit" class="btn btn-primary">Register</button>
-    <a id="textHolder"></a>
-    <a id = "logInT" href="/home">If you have an account, login here</a>
-</form>
-<script>
-function registerUser() {
-
-    var userEmailInput = document.getElementById("userEmailInput").value;
-    var userPasswordInput = document.getElementById("userPasswordInput").value;
-    var textHolder = document.getElementById("textHolder");
-    var logInT = document.getElementById("logInT");
-
-    fetch("/register", {
-        method: "POST",
-        body: JSON.stringify({email: userEmailInput, password: userPasswordInput}),
-        headers: {
-            "Content-Type": "application/json",
-        },
-    })
-
-        .then(response => {
-            if (response.status === 200) {
-                textHolder.innerHTML = "Account created with success"
-                logInT.innerHTML = "Login here"
-            } else if (response.status === 500) {
-                textHolder.innerHTML = "Account with email: " + userEmailInput + "Already exists"
-            } else {
-                textHolder.innerHTML = "Something wrong happened"
-            }
-        }).catch(err => {
-        console.log('Error', err);
-    });
-}
-
-    document.querySelector('form[name="myForm"]').addEventListener('submit', function (event) {
-        event.preventDefault();
-        registerUser();
-    });
-
-
-
-
-</script>
-
+  </div>
 
 </body>
-</HTML>
+<script>
+  async function register(){
+    try {
+      var email = document.getElementById("emailInput").value;
+      var user = document.getElementById("userInput").value;
+      var pass = document.getElementById("passInput").value
+      const response = await fetch("/auth/register-user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email,
+          username: user,
+          password: pass }),
+      });
+
+      if (response.ok) {
+        location.href = "/home"
+      } else {
+        console.error("Failed")
+      }
+
+    } catch (e) {
+      console.error(e)
+    }
+
+  }
+
+  function sendToAbout(){
+    location.href = "/post/about"
+  }
+
+  document.querySelectorAll(".register-btn").forEach(function (button) {
+    button.addEventListener("click", function (){
+      register();
+    })
+  })
+</script>
+</html>

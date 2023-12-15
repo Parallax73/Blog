@@ -1,106 +1,132 @@
-<HTML lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
-
-  <title>Login</title>
-  <h1>Login</h1>
-
+    <meta charset="UTF-8">
+    <link
+          rel="stylesheet"
+          href="https://unpkg.com/98.css"
+    >
+    <title>Login</title>
+    <link rel="icon" type="image/x-icon" href="../../../../../posts/src/main/resources/templates/Star.ico">
 </head>
+<style>
+  body {
+      background-color: #008080;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+  }
+  .wdn-text{
+      font-size: 12px;
+      margin-bottom: 50px;
+  }
+
+  .window {
+    width: 570px;
+    height: 180px;
+    position: absolute;
+  }
+
+  .window-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .textfield,
+  .textfield1{
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      width: 125px;
+  }
+  .textfield{
+      margin-top: 40px;
+  }
+  .textfield1{
+    margin-top: 105px;
+  }
+
+  .label,
+  .label1{
+      position: absolute;
+      align-self: start;
+      margin-left: 150px;
+  }
+  .label{
+      margin-top: 40px;
+  }
+  .label1{
+      margin-top: 105px;
+  }
+  .btn1,
+  .btn2{
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+  }
+  .btn1{
+      margin-left: 460px;
+  }
+  .btn2{
+      margin-left: 460px;
+      margin-top: 60px;
+  }
+  .image-key{
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      width: 52px;
+      height: 52px;
+      margin-right: 370px;
+      margin-top: 40px;
+  }
+  .p{
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      margin-top: 175px;
+  }
+
+
+
+</style>
 <body>
-<form method="post" name="myForm" action="/login" onbeforematch="/token">
-  <div class="mb-3">
-    <label for="userEmailInput">Email:</label>
-    <input type="email" class="form-control" name="email" id="userEmailInput" placeholder="Enter your email">
-    <small id="text" class="form-text text-muted"></small>
+<div class="window" >
+  <div class="title-bar">
+    <div class="title-bar-text">Welcome</div>
+    <div class="title-bar-controls">
+      <button aria-label="Help" onclick="sendToAbout()"></button>
+    </div>
   </div>
-  <div>
-    <label for="userPasswordInput">Password:</label>
-    <input type="password" class="form-control" name="password" id="userPasswordInput" placeholder="Enter your email">
-    <small id="text1" class="form-text text-muted"></small>
+  <div class="window-body">
+    <img src="WindowsKey.ico" alt="keyico" class="image-key">
+
+    <p class="wdn-text">Type a username and a password to log in</p>
+
+    <label class="label">User name:</label>
+    <label class="label1">Password:</label>
+
+    <button type="button" class="btn1">OK</button>
+    <button type="button" class="btn2">Cancel</button>
+
+    <input type="text" class="textfield">
+    <input type="password" class="textfield1">
+
+      <p class="p">
+           If you don't have an account
+          <a href="/register"> Register here</a>
+      </p>
+
   </div>
-  <div class="mb-3">
-  <button type="submit" class="btn btn-primary">Login</button>
-    <a id="text2"></a>
-    <a href="/register">If you don't have an account, register here</a>
-  </div>
-</form>
-<script>
-  var token;
-
-  function redirectWhenS() {
-    var userEmailInput = document.getElementById('userEmailInput').value;
-    var userPasswordInput = document.getElementById('userPasswordInput').value;
-
-    const aText = document.getElementById('text2');
-
-    fetch("/login", {
-      method: "POST",
-      body: JSON.stringify({ email: userEmailInput, password: userPasswordInput }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }).then(response => {
-      if (response.status === 200) {
-        return response.json();
-      } else {
-        throw new Error("Wrong password or email");
-      }
-    }).then(data => {
-      token = data.token;
-      return fetch("/token", {
-        method: "POST",
-        body: JSON.stringify({ token: token }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-    }).then(response => {
-      if (response.status === 200) {
-        sendToken();
-      } else {
-        throw new Error("Wrong password or email");
-      }
-    }).catch(error => {
-      console.error('Error', error);
-      aText.innerHTML = error.message;
-    });
-  }
-
-  function sendToken(){
-
-      const fetchOptions = {
-        method: "GET",
-        headers: {
-          'Authorization': 'Bearer ${token}'
-        },
-
-      }
-      fetch("/profile",fetchOptions)
-              .then(response => {
-                if (response.status === 200){
-                  window.location.href = "/profile"
-                } else{
-
-                }
-              })
-              .catch(err => {
-                console.log(err);
-              })
-  }
-
-  document.querySelector('form[name="myForm"]').addEventListener('submit', function (event) {
-    event.preventDefault();
-    redirectWhenS();
-  });
-</script>
-
-
+</div>
 
 </body>
-</HTML>
+</html>

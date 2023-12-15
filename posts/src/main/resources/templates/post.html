@@ -21,20 +21,9 @@
     }
 
     .window {
-      border: 2px solid red;
       width: 30%;
       height: 25%;
       overflow: hidden;
-    }
-    .post-table{
-      background-color: #c0c0c0;
-      border-style: solid;
-      color: rgb(0, 0, 0);
-      position: relative;
-      border-color: rgb(128, 128, 128);
-      display: flex;
-      justify-content: center;
-      align-items: center;
     }
 
     .textarea {
@@ -68,6 +57,10 @@
       overflow: hidden;
       position: relative;
     }
+    .vote-btn{
+      font-size: 12px;
+    }
+
 
   </style>
 </head>
@@ -110,20 +103,20 @@
       <textarea class="textarea" readonly tabindex="-1">www.post.com</textarea>
     </div>
     <a id="var-text" href="#" style="font-size: 14px"></a>
-      <textarea id="txtarea" style="width: 740px; height: 450px;  align-self: center; font-size: 14px"></textarea>
+    <a class="vote-btn" id="upvote-btn" href="#" onclick="upvotef()" style="margin-left: 10px;margin-right: 3px"></a>
+    <a class="vote-btn" id="downvote-btn" href="#" onclick="downvotef()"></a>
+    <textarea id="txtarea" style="width: 740px; height: 450px;  align-self: center; font-size: 14px;"></textarea>
   </div>
 </div>
 </body>
 <script th:inline="javascript">
   let btntxt = /*[[${buttontxt}]]*/ 'default';
   let vartxt = document.getElementById("var-text");
+  let upvote = document.getElementById("upvote-btn");
+  let downvote = document.getElementById("downvote-btn");
   let textarea = document.getElementById("txtarea");
   let errorText = "Could not find the post you're trying to reach"
   let postText = /*[[${postText}]]*/ 'default';
-
-
-
-
 
   switch (btntxt) {
     case "Homepage":
@@ -133,6 +126,8 @@
         textarea.readOnly = true;
         textarea.innerText = errorText;
       } else {
+        upvote.innerText = "Upvote";
+        downvote.innerText = "Downvote"
         textarea.innerText = postText;
         textarea.readOnly = true;
       }
@@ -197,6 +192,36 @@
       }).catch(e => {
         console.error(e);
       })
+  }
+
+
+  function upvotef() {
+    let postIdd = /*[[${postIdd}]]*/ 'default';
+    fetch("upvote/"+postIdd, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then(response => {
+      if (response.status === 200) {}
+      location.reload();
+    }).catch(e => {
+      console.error(e);
+    })
+  }
+  function downvotef() {
+    let postIdd = /*[[${postIdd}]]*/ 'default';
+    fetch("downvote/"+postIdd, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then(response => {
+      if (response.status === 200) {}
+      location.reload();
+    }).catch(e => {
+      console.error(e);
+    })
   }
 </script>
 </html>
