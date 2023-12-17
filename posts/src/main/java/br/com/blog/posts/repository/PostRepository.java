@@ -1,5 +1,6 @@
 package br.com.blog.posts.repository;
 
+import br.com.blog.posts.entity.Comment;
 import br.com.blog.posts.entity.Post;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -13,9 +14,21 @@ public interface PostRepository extends MongoRepository<Post,String> {
 
     List<Post> findAllByOrderByDateTimeAsc();
 
+    List<Post> findAllByOrderByUpvoteCountDesc();
+
+    List<Post> findAllByOrderByDownvoteCountDesc();
+
+
+
+    @Query("{'_id' :  ?0}" +
+            "{'$set' : comments}")
+    List<Comment> findAllCommentsByPost(String id);
+
     @Query("{'text': {$regex : '?0'}}" +
             "{'author': {$regex : '?0'}}")
     List<Post> findAllByAuthorOrTextOrderByDateTimeAsc(String keyword);
+
+    List<Post> findAllByAuthorOrderByDateTimeDesc(String author);
 
 
     @Query("{'_id': ?0}")

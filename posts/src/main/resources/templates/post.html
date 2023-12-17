@@ -22,11 +22,11 @@
 
     .window {
       width: 30%;
-      height: 25%;
+      height: 40rem;
       overflow: hidden;
     }
 
-    .textarea {
+    .textarea, post{
       width: 690px;
       height: 20px;
       resize: none;
@@ -59,6 +59,22 @@
     }
     .vote-btn{
       font-size: 12px;
+    }
+    .txtarea{
+      width: 100%;
+      height: 15rem;
+      overflow-y: scroll;
+      resize: none;
+      font-size: 14px;
+    }
+    .post-table{
+      border: 1px solid black;
+      outline: 1px solid grey;
+      background-color: #c0c0c0;
+      width: 100%;
+      height: 15rem;
+      margin-top: 15px;
+     /* display: none;*/
     }
 
 
@@ -105,23 +121,38 @@
     <a id="var-text" href="#" style="font-size: 14px"></a>
     <a class="vote-btn" id="upvote-btn" href="#" onclick="upvotef()" style="margin-left: 10px;margin-right: 3px"></a>
     <a class="vote-btn" id="downvote-btn" href="#" onclick="downvotef()"></a>
-    <textarea id="txtarea" style="width: 740px; height: 450px;  align-self: center; font-size: 14px;"></textarea>
+    <div class="window-content">
+    <textarea class="txtarea" id="txtarea"></textarea>
+      <table class="post-table" id="post-table">
+        <tbody>
+        <tr th:each="comment : ${comment}">
+          <td th:text="${comment.getSubText()}" style="cursor: pointer; text-decoration: underline;"></td>
+          <td th:text="${comment.author}" style="cursor: pointer; text-decoration: underline;"></td>
+        </tr>
+        <a id="errorA" style="margin: 5px; font-size: 14px; color: crimson; display: none">No results...</a>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
 </body>
 <script th:inline="javascript">
   let btntxt = /*[[${buttontxt}]]*/ 'default';
-  let vartxt = document.getElementById("var-text");
-  let upvote = document.getElementById("upvote-btn");
-  let downvote = document.getElementById("downvote-btn");
-  let textarea = document.getElementById("txtarea");
-  let errorText = "Could not find the post you're trying to reach"
+  const vartxt = document.getElementById("var-text");
+  const upvote = document.getElementById("upvote-btn");
+  const downvote = document.getElementById("downvote-btn");
+  const textarea = document.getElementById("txtarea");
+  const errorText = "Could not find the post you're trying to reach"
   let postText = /*[[${postText}]]*/ 'default';
+  const postTable = document.getElementById("post-table");
+
 
   switch (btntxt) {
     case "Homepage":
+      const comment = /*[[${comment}]]*/ 'default';
       vartxt.innerText = btntxt;
       vartxt.href = "home";
+      console.log("thats is "+comment);
       if (!postText) {
         textarea.readOnly = true;
         textarea.innerText = errorText;
@@ -130,11 +161,13 @@
         downvote.innerText = "Downvote"
         textarea.innerText = postText;
         textarea.readOnly = true;
+        postTable.style.display = "flex"
       }
       break;
     case "Edit":
       vartxt.innerText = btntxt;
       if (postText) {
+        textarea.style.height = "33rem"
         textarea.innerText = postText;
         let postId = /*[[${postId}]]*/ 'default';
         vartxt.addEventListener("click", function (event) {
@@ -145,14 +178,25 @@
         textarea.innerText = errorText;
       }
       break;
-
     case "Create":
+      textarea.style.height = "33rem"
       vartxt.innerText = btntxt;
       vartxt.href = "home";
       textarea.setAttribute("placeholder", "What do you wanna share about?");
       vartxt.addEventListener("click", function (event) {
         event.preventDefault();
         createPost();
+      })
+      break;
+    case "Create comment":
+      textarea.style.height = "33rem";
+      postTable.style.display="flex";
+      vartxt.innerText = btntxt;
+      vartxt.href = "home";
+      textarea.setAttribute("placeholder", "What do you wanna share about?");
+      vartxt.addEventListener("click", function (event) {
+        event.preventDefault();
+        createComment();
       })
       break;
       }
@@ -194,6 +238,26 @@
       })
   }
 
+  function createComment() {
+    let textToCreate = textarea.value;
+    const url = window.location.href.split("/");
+    let postIdd = url.at(4)
+    console.info(textToCreate , postIdd);
+    fetch(window.location+"/new-comment", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        comment: textToCreate})
+    }).then(response => {
+      if (response.status === 200) {
+        history.back();
+      }
+    }).catch(e => {
+      console.error(e);
+    })
+  }
 
   function upvotef() {
     let postIdd = /*[[${postIdd}]]*/ 'default';

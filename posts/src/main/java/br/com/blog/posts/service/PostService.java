@@ -3,7 +3,9 @@ package br.com.blog.posts.service;
 
 import br.com.blog.posts.dto.EditDTO;
 import br.com.blog.posts.dto.PostDTO;
+import br.com.blog.posts.entity.Comment;
 import br.com.blog.posts.entity.Post;
+import br.com.blog.posts.repository.CommentRepository;
 import br.com.blog.posts.repository.PostRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,9 @@ public class PostService {
 
     @Autowired
     PostRepository repository;
+
+    @Autowired
+    CommentRepository commentRepository;
 
     public void createPost(PostDTO dto){
         var post = new Post(dto);
@@ -55,6 +60,17 @@ public class PostService {
         return repository.findAllByOrderByDateTimeAsc();
     }
 
+    public List<Post> listAllByUpvote(){
+        return repository.findAllByOrderByUpvoteCountDesc();
+    }
+
+    public List<Post> listAllByDownvote(){
+        return repository.findAllByOrderByDownvoteCountDesc();
+    }
+
+    public List<Post> listAllByAuthor(String author){
+        return repository.findAllByAuthorOrderByDateTimeDesc(author);
+    }
 
 
     public Optional<Post> getPostById(String id) {
@@ -79,6 +95,20 @@ public class PostService {
     public void upvote(String id){
         repository.updateUpvote(id);
         log.info("upvote post with id {}",id);
+    }
+
+
+    public void downvote(String id){
+        repository.updateDownvote(id);
+        log.info("downvoted post with id {}",id);
+    }
+
+    public List<Comment> listAllCommentByPost(String id){
+        var list = commentRepository.findAllByPostId(id);
+        if (list.size()>14){
+            return list.subList(0,14);
+        }
+        return list;
     }
 
 

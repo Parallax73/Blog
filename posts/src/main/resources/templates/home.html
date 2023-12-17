@@ -127,6 +127,12 @@
 
         <table class="post-table" style="width: 735px; height: 500px; margin-top: 10px;  align-self: center">
             <a href="">Your profile</a>
+            <select id="select-bar" style="margin-left: 10px;">
+                <option disabled>Sort by</option>
+                <option>Most recent</option>
+                <option>Most upvoted</option>
+                <option>Most downvoted</option>
+            </select>
             <tbody>
             <tr data-th-each="post : ${post}">
                 <td  class="clickableCell" th:attr="data-post-id=${post.id}" data-th-text="${post.getSubText()}" style="cursor: pointer; text-decoration: underline;"></td>
@@ -143,7 +149,7 @@
 <script>
     let postList = /*[[${post}]]*/ 'default';
     let error = document.getElementById("errorA")
-
+    let selectOption = document.getElementById("select-bar");
 
     if (postList==="null"){
         error.setAttribute("display", "flex");
@@ -156,13 +162,28 @@
     }
 
 
+
+
+    selectOption.addEventListener("change", function () {
+        switch (selectOption.value){
+            case "Most recent":
+                location.href = "home"
+                break;
+            case "Most upvoted":
+                window.location.href = "home/upvote/"
+                break;
+            case "Most downvoted":
+                window.location.href = "home/downvote/"
+                break;
+        }
+    })
+
     document.querySelectorAll(".clickableCell").forEach(function (clickCell) {
         clickCell.addEventListener("click", function () {
             let postId = clickCell.getAttribute("data-post-id");
             location.href = "/post/" + postId;
         });
     });
-
 
 </script>
 </html>

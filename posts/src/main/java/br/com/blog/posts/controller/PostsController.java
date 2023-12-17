@@ -1,13 +1,12 @@
 package br.com.blog.posts.controller;
 
 
+import br.com.blog.posts.dto.CommentDTO;
 import br.com.blog.posts.dto.EditDTO;
 import br.com.blog.posts.dto.PostDTO;
-import br.com.blog.posts.entity.Post;
+import br.com.blog.posts.entity.Comment;
 import br.com.blog.posts.service.PostService;
-import jakarta.ws.rs.Path;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -31,17 +30,40 @@ public class PostsController {
     //Thymeleaf endpoints
 
     @GetMapping("/home")
-    public ModelAndView profile(){
+    public ModelAndView home(){
         ModelAndView mv = new ModelAndView("home");
         mv.addObject("post",service.listAllPosts());
         return mv;
     }
+
+    @GetMapping("/home/upvote/")
+    public ModelAndView sortByUpvote(){
+        ModelAndView mv = new ModelAndView("home");
+        mv.addObject("post",service.listAllByUpvote());
+        return mv;
+    }
+
+    @GetMapping("/home/downvote")
+    public ModelAndView sortByDownvote(){
+        ModelAndView mv = new ModelAndView("home");
+        mv.addObject("post",service.listAllByDownvote());
+        return mv;
+    }
+
+
 
     @GetMapping("/create")
     public ModelAndView create(){
         ModelAndView mv = new ModelAndView("post");
         mv.addObject("buttontxt", "Create");
         log.info("create method called");
+        return mv;
+    }
+
+    @GetMapping("/home/{author}/")
+    public ModelAndView findByAuthor(@PathVariable("author") String author){
+        ModelAndView mv = new ModelAndView("home");
+        mv.addObject("post",service.listAllByAuthor(author));
         return mv;
     }
 
@@ -52,14 +74,14 @@ public class PostsController {
             mv.addObject("postText", service.getPostById(id).get().getText());
             mv.addObject("buttontxt", "Homepage");
             mv.addObject("postIdd",service.getPostById(id).get().getId());
+            mv.addObject("comment", service.listAllCommentByPost(id));
             log.info("found");
-            return mv;
         } else {
             mv.addObject("buttontxt", "Homepage");
             mv.addObject("postText", null);
             log.info("Not found :(");
-            return mv;
         }
+        return mv;
     }
 
     @GetMapping("/{id}/edit")
@@ -113,4 +135,18 @@ public class PostsController {
         service.upvote(id);
     }
 
+    @PatchMapping("/downvote/{id}")
+    public void downvote(@PathVariable("id") String id){
+        service.downvote(id);
+    }
+
+    @GetMapping("teste")
+    public void teste(){
+        List<Comment> s = service.listAllCommentByPost("657dd42c95a65361a3695fb6");
+        for (Comment comment: s){
+            System.out.println(comment.getText());
+        }
+
+
+    }
 }

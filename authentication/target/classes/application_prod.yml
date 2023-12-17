@@ -1,0 +1,18 @@
+spring:
+  mail:
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+          auth: true
+    host: smtp.gmail.com
+    username: {MAIL.EMAIL}
+    password: {MAIL.PASSWORD}
+    port: 587
+  datasource:
+    username: {DATASOURCE.USERNAME}
+    url: {DATASOURCE.URL}
+    password: {DATASOURCE.PASSWORD}
+  jpa:
+    show-sql: true

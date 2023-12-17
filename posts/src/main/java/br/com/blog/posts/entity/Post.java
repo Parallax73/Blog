@@ -9,6 +9,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Document
@@ -24,6 +26,7 @@ public class Post {
     private String author;
     private Integer upvoteCount;
     private Integer downvoteCount;
+    private List<Comment> comments;
 
 
     public Post(PostDTO post){
@@ -31,6 +34,7 @@ public class Post {
         this.upvoteCount=0;
         this.downvoteCount=0;
         this.dateTime = LocalDate.now();
+        comments = new ArrayList<>();
     }
 
 
@@ -40,13 +44,21 @@ public class Post {
 
 
     public String getSubText(){
-        return text.substring(0,80);
+        if (text.length()>80){
+            return text.substring(0,80);
+        }
+        return text;
     }
 
+    public void addComment(Comment comment){
+        comments.add(comment);
+    }
 
     public String getVoteCount(){
         if (upvoteCount>downvoteCount){
             return "+ "+upvoteCount;
+        } else if (upvoteCount==0&&downvoteCount==0){
+            return "0";
         }
         return "- "+downvoteCount;
 
