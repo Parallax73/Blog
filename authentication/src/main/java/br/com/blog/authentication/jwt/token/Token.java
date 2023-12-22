@@ -2,15 +2,13 @@ package br.com.blog.authentication.jwt.token;
 
 import br.com.blog.authentication.auth.entity.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity(name = "token")
 @Table(name = "tokens")
 @Setter
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Token {
