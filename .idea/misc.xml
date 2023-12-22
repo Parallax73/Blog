@@ -7,6 +7,7 @@
         <option value="$PROJECT_DIR$/authentication/pom.xml" />
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/gateway/pom.xml" />
+        <option value="$PROJECT_DIR$/posts/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
