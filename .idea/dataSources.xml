@@ -8,11 +8,11 @@
       <jdbc-url>mongodb://localhost:27017/</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="Authentication@localhost" uuid="e4e9ef03-09a5-4f58-9e18-bd7a1275106e">
-      <driver-ref>mysql.8</driver-ref>
+    <data-source source="LOCAL" name="AuthDB@localhost" uuid="fc4941d2-76f0-456a-b8de-48966459d04a">
+      <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
-      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
-      <jdbc-url>jdbc:mysql://localhost:3306/Authentication</jdbc-url>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:5432/AuthDB</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>

@@ -8,11 +8,13 @@
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/gateway/pom.xml" />
         <option value="$PROJECT_DIR$/posts/pom.xml" />
+        <option value="$PROJECT_DIR$/../spring-boot-3-jwt-security-main/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
       <set>
         <option value="$PROJECT_DIR$/config-server/pom.xml" />
+        <option value="$PROJECT_DIR$/../spring-boot-3-jwt-security-main/pom.xml" />
       </set>
     </option>
   </component>
