@@ -14,11 +14,9 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>authentication</module>
         <module>discovery</module>
         <module>gateway</module>
         <module>posts</module>
-        <module>authentication</module>
     </modules>
 
     <properties>

@@ -10,10 +10,10 @@
         <module name="posts" />
         <module name="discovery" />
         <module name="gateway" />
-        <module name="authentication" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="authentication" target="17" />
       <module name="config-server" target="17" />
       <module name="security" target="17" />
       <module name="security (1)" target="17" />
