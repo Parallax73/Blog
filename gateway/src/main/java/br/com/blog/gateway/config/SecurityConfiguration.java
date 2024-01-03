@@ -11,20 +11,18 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 
 import static br.com.blog.gateway.user.Permission.*;
-import static br.com.blog.gateway.user.Role.ADMIN;
-import static br.com.blog.gateway.user.Role.MANAGER;
+import static br.com.blog.gateway.user.Role.*;
 import static org.springframework.http.HttpMethod.*;
 
 
-/*@Configuration*/
 @EnableWebSecurity
 @RequiredArgsConstructor
-/*@EnableMethodSecurity*/
 @Configuration
 @EnableWebFluxSecurity
     public class SecurityConfiguration {
 
-    private static final String[] WHITE_LIST_URL = {"/api/v1/auth/teste",
+    private static final String[] WHITE_LIST_URL = {"/auth/**",
+            "post/home",
             "/v2/api-docs",
             "/v3/api-docs",
             "/v3/api-docs/**",
@@ -46,6 +44,7 @@ import static org.springframework.http.HttpMethod.*;
         http.csrf().disable()
                 .authorizeExchange(req -> req
                         .pathMatchers(WHITE_LIST_URL).permitAll()
+                        .pathMatchers("/post/**").hasAnyRole(USER.name())
                         .pathMatchers("/api/v1/management/**").hasAnyRole(ADMIN.name(), MANAGER.name())
                         .pathMatchers(GET, "/api/v1/management/**").hasAnyAuthority(ADMIN_READ.name(), MANAGER_READ.name())
                         .pathMatchers(POST, "/api/v1/management/**").hasAnyAuthority(ADMIN_CREATE.name(), MANAGER_CREATE.name())

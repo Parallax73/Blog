@@ -1,9 +1,9 @@
 package br.com.blog.posts.post.controller;
 
 
+import br.com.blog.posts.comment.entity.Comment;
 import br.com.blog.posts.post.dto.EditDTO;
 import br.com.blog.posts.post.dto.PostDTO;
-import br.com.blog.posts.comment.entity.Comment;
 import br.com.blog.posts.post.service.PostService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;

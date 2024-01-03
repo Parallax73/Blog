@@ -4,37 +4,36 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
 
-@RestController
-@RequestMapping("/api/v1/auth")
+@Controller
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthenticationController {
 
     private final AuthenticationService service;
 
+
     @GetMapping("/login")
     public ModelAndView loginPage(){
-        ModelAndView mv = new ModelAndView("login");
-        return mv;
+        return new ModelAndView("login");
     }
 
     @GetMapping("/register")
-    public ModelAndView registerPage(){
-        ModelAndView mv = new ModelAndView("register");
-        return mv;
+    public String registerPage(){
+        return "register";
     }
-
 
     @PostMapping("/register-user")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
         return ResponseEntity.ok(service.register(request));
     }
 
-    @PostMapping("/authenticate")
+    @PostMapping("/login-user")
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
         return ResponseEntity.ok(service.authenticate(request));
     }

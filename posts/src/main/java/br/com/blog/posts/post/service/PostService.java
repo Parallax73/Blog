@@ -1,11 +1,11 @@
 package br.com.blog.posts.post.service;
 
 
+import br.com.blog.posts.comment.entity.Comment;
+import br.com.blog.posts.comment.repository.CommentRepository;
 import br.com.blog.posts.post.dto.EditDTO;
 import br.com.blog.posts.post.dto.PostDTO;
-import br.com.blog.posts.comment.entity.Comment;
 import br.com.blog.posts.post.entity.Post;
-import br.com.blog.posts.comment.repository.CommentRepository;
 import br.com.blog.posts.post.repository.PostRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

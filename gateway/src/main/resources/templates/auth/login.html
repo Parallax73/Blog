@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link
+            rel="stylesheet"
+            href="https://unpkg.com/98.css"
+    >
+    <title>Login</title>
+    <link rel="icon" type="image/x-icon" href="https://cdn.discordapp.com/attachments/821189072709615630/1187430647703285780/image.png?ex=6596dbf7&is=658466f7&hm=dda0537453350e5af8585ea0bd0468aa0273f8b13b35032123c3bb5ef23b1330&">
+</head>
+<style>
+    body {
+        background-color: #008080;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+    .wdn-text{
+        font-size: 12px;
+        margin-bottom: 50px;
+    }
+
+    .window {
+        width: 570px;
+        height: 180px;
+        position: absolute;
+    }
+
+    .window-body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+    .textfield,
+    .textfield1{
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 125px;
+    }
+    .textfield{
+        margin-top: 40px;
+    }
+    .textfield1{
+        margin-top: 105px;
+    }
+
+    .label,
+    .label1{
+        position: absolute;
+        align-self: start;
+        margin-left: 150px;
+    }
+    .label{
+        margin-top: 40px;
+    }
+    .label1{
+        margin-top: 105px;
+    }
+    .btn1,
+    .btn2{
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    .btn1{
+        margin-left: 460px;
+    }
+    .btn2{
+        margin-left: 460px;
+        margin-top: 60px;
+    }
+    .image-key{
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 52px;
+        height: 52px;
+        margin-right: 370px;
+        margin-top: 40px;
+    }
+    .p{
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin-top: 175px;
+    }
+
+
+
+</style>
+<body>
+<div class="window" >
+    <div class="title-bar">
+        <div class="title-bar-text">Welcome</div>
+        <div class="title-bar-controls">
+            <button aria-label="Help" onclick="sendToAbout()"></button>
+        </div>
+    </div>
+    <div class="window-body">
+        <img src="https://cdn.discordapp.com/attachments/821189072709615630/1187430647703285780/image.png?ex=6596dbf7&is=658466f7&hm=dda0537453350e5af8585ea0bd0468aa0273f8b13b35032123c3bb5ef23b1330&" alt="keyico" class="image-key">
+
+        <p class="wdn-text" id="typoMsg">Type a username and a password to log in</p>
+
+        <label class="label">Username:</label>
+        <label class="label1">Password:</label>
+
+        <button type="button" id="okBtn" class="btn1" onclick="loginFunc()">OK</button>
+        <button type="button" class="btn2">Cancel</button>
+
+        <label for="usnInput"></label><input type="text" id="usnInput" class="textfield">
+        <label for="pwdInput"></label><input type="password" id="pwdInput" class="textfield1">
+
+        <p class="p">
+            If you don't have an account
+            <a href="#" onclick="sendToRegister()"> Register here</a>
+        </p>
+
+    </div>
+</div>
+<script>
+
+    function sendToRegister(){
+        window.location = "register"
+    }
+
+    function loginFunc(){
+        var usnInput = document.getElementById("usnInput").value;
+        var pwdInput = document.getElementById("pwdInput").value;
+        var typo = document.getElementById("typoMsg");
+        fetch("/auth/login-user", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                username : usnInput,
+                password : pwdInput
+            })
+        }).then(response => {
+            if (response.status===200){
+                window.location = "/post/home"
+                return response.json();
+            } else {
+                console.error("BADDD!!!" + response.status)
+                typo.style.color = "red";
+                typo.innerText = "Wrong password or username"
+            }
+        }).then(data => {
+            const jwtToken = data.access_token;
+            localStorage.setItem("jwt", jwtToken)
+            console.log(jwtToken)
+        })
+
+            .catch(e => {
+            console.error(e)
+        })
+    }
+
+    var okBtn = document.getElementById("okBtn")
+    okBtn.addEventListener("click", function (event){
+        event.preventDefault();
+        loginFunc();
+    })
+</script>
+</body>
+</html>
