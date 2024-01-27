@@ -2,7 +2,7 @@ package br.com.blog.posts.post.repository;
 
 import br.com.blog.posts.comment.entity.Comment;
 import br.com.blog.posts.post.entity.Post;
-
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.mongodb.repository.Update;
@@ -12,13 +12,15 @@ import java.util.List;
 
 public interface PostRepository extends MongoRepository<Post,String> {
 
-    List<Post> findAllByOrderByDateTimeAsc();
 
     List<Post> findAllByOrderByUpvoteCountDesc();
 
     List<Post> findAllByOrderByDownvoteCountDesc();
 
+    List<Post> findAllByOrderByDateTimeDesc(Pageable pageable);
 
+    @Query("{}")
+    List<Post> findPaginatedPosts(Pageable pageable);
 
     @Query("{'_id' :  ?0}" +
             "{'$set' : comments}")

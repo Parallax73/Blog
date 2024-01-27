@@ -7,8 +7,10 @@ import br.com.blog.posts.post.dto.EditDTO;
 import br.com.blog.posts.post.dto.PostDTO;
 import br.com.blog.posts.post.entity.Post;
 import br.com.blog.posts.post.repository.PostRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,7 @@ import java.util.Optional;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class PostService {
 
     @Autowired
@@ -25,10 +28,11 @@ public class PostService {
     @Autowired
     CommentRepository commentRepository;
 
+
     public void createPost(PostDTO dto){
         var post = new Post(dto);
         log.info("Tried to create a post");
-        post.setAuthor("parallax");
+        post.setAuthor(dto.author());
         repository.insert(post);
     }
 
@@ -56,8 +60,9 @@ public class PostService {
 
 
 
-    public List<Post> listAllPosts(){
-        return repository.findAllByOrderByDateTimeAsc();
+    public List<Post> listAllPosts(int page){
+        PageRequest pageRequest = PageRequest.of(page,23);
+        return repository.findAllByOrderByDateTimeDesc(pageRequest);
     }
 
     public List<Post> listAllByUpvote(){
@@ -76,7 +81,6 @@ public class PostService {
     public Optional<Post> getPostById(String id) {
         return repository.findById(id);
     }
-
 
     public List<Post> searchPosts(String searchCon) {
         try {
@@ -101,6 +105,10 @@ public class PostService {
     public void downvote(String id){
         repository.updateDownvote(id);
         log.info("downvoted post with id {}",id);
+    }
+
+    public List<Post> postsByUser(String user){
+        return repository.findAllByAuthorOrderByDateTimeDesc(user);
     }
 
     public List<Comment> listAllCommentByPost(String id){

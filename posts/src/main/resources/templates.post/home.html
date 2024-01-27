@@ -126,7 +126,8 @@
 
 
         <table class="post-table" style="width: 735px; height: 500px; margin-top: 10px;  align-self: center">
-            <a href="">Your profile</a>
+            <a id="profileBtn" href="">Your profile</a>
+            <a href="/post/create" style="margin-left: 5px">Create a post</a>
             <select id="select-bar" style="margin-left: 10px;">
                 <option disabled>Sort by</option>
                 <option>Most recent</option>
@@ -135,12 +136,14 @@
             </select>
             <tbody>
             <tr data-th-each="post : ${post}">
-                <td  class="clickableCell" th:attr="data-post-id=${post.id}" data-th-text="${post.getSubText()}" style="cursor: pointer; text-decoration: underline;"></td>
+                <td th:attr="data-post-id=${post.id}" class="clickableCell" data-th-text="${post.getSubText()}" style="cursor: pointer; text-decoration: underline; min-width: 75ch"></td>
                 <td data-th-text="${post.author}" style="cursor: pointer; text-decoration: underline;"></td>
                 <td data-th-text="${post.getVoteCount()}" style="cursor: pointer; text-decoration: underline;"></td>
                 <td data-th-text="${post.dateTime}"></td>
             </tr>
-                <a id="errorA" style="margin: 5px; font-size: 14px; color: crimson; display: none">No results...</a>
+            <a href="#" id="nextPage-btn" style="margin: 5px;text-decoration: underline">Next page</a>
+            <a href="#" id="backPage-btn" style="text-decoration: underline">Back page</a>
+            <a id="errorA" style="margin: 5px; font-size: 14px; color: crimson; display: none">No results...</a>
             </tbody>
         </table>
     </div>
@@ -150,10 +153,47 @@
     let postList = /*[[${post}]]*/ 'default';
     let error = document.getElementById("errorA")
     let selectOption = document.getElementById("select-bar");
+    const url = window.location.href.split("/");
+    let page= url.at(5)
+
 
     if (postList==="null"){
         error.setAttribute("display", "flex");
     }
+
+    var user;
+    try {
+        var jwt = localStorage.getItem("jwt")
+        if (jwt === null || jwt === ""){
+            window.location = "/auth/login"
+        }
+    } catch (e) {
+        console.log(e)
+    }
+
+    fetch("/auth/get-claims/" + jwt, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+    })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                console.error("Error:", response.status, response.statusText);
+                throw new Error("Bad response from server");
+            }
+        })
+        .then(data => {
+            user = data.username;
+            console.log(user)
+            document.getElementById("profileBtn").href = "/post/user/" + user;
+        })
+        .catch(error => {
+            console.error("Fetch error:", error);
+        });
+
 
     function search(event) {
         event.preventDefault(); // Prevent the default form submission behavior
@@ -167,13 +207,13 @@
     selectOption.addEventListener("change", function () {
         switch (selectOption.value){
             case "Most recent":
-                location.href = "home"
+                window.location.href = "/post/home/0"
                 break;
             case "Most upvoted":
-                window.location.href = "home/upvote/"
+                window.location.href = "/post/home/upvote/"
                 break;
             case "Most downvoted":
-                window.location.href = "home/downvote/"
+                window.location.href = "/post/home/downvote/"
                 break;
         }
     })
@@ -185,5 +225,18 @@
         });
     });
 
+    document.getElementById("nextPage-btn").addEventListener("click", function () {
+        page++;
+        location.href = "/post/home/" + page;
+    })
+
+    document.getElementById("backPage-btn").addEventListener("click", function () {
+        if (page === "0"){
+
+        } else {
+            page--;
+            location.href = "/post/home/" + page;
+        }
+    })
 </script>
 </html>

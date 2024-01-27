@@ -46,7 +46,7 @@ public class Post {
 
     public String getSubText(){
         if (text.length()>80){
-            return text.substring(0,80);
+            return text.substring(0,75);
         }
         return text;
     }

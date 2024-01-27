@@ -1,5 +1,6 @@
 package br.com.blog.gateway.auth;
 
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,8 +11,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthenticationResponse {
+public class ClaimResponse {
 
-  @JsonProperty("access_token")
-  private String accessToken;
+    @JsonProperty("username")
+    private String username;
 }

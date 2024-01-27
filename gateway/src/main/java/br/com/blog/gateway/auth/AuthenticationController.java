@@ -24,8 +24,8 @@ public class AuthenticationController {
     }
 
     @GetMapping("/register")
-    public String registerPage(){
-        return "register";
+    public ModelAndView registerPage(){
+        return new ModelAndView("register");
     }
 
     @PostMapping("/register-user")
@@ -38,9 +38,10 @@ public class AuthenticationController {
         return ResponseEntity.ok(service.authenticate(request));
     }
 
-    @GetMapping("/teste")
-    public String teste(@RequestHeader("Authorization") String token){
-        return service.getClaims(token);
+    @GetMapping("/get-claims/{token}")
+    @ResponseBody
+    public ResponseEntity<ClaimResponse> teste(@PathVariable("token") String token) {
+            return ResponseEntity.ok(service.getClaims(token));
     }
 
     @PostMapping("/refresh-token")

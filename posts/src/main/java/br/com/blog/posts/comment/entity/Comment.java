@@ -37,4 +37,8 @@ public class Comment {
         }
         return text;
     }
+
+    public String getAuthor(){
+        return author;
+    }
 }

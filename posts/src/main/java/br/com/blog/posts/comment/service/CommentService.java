@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 
 @Service
 @Slf4j
@@ -28,5 +30,9 @@ public class CommentService {
         log.info("Tried to create a comment for post {}",post.getId());
         commentRepository.save(comment);
         postRepository.save(post);
+    }
+
+    public Optional<Comment> getComment(String id){
+        return commentRepository.findById(id);
     }
 }

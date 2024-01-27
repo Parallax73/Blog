@@ -25,6 +25,22 @@ public class CommentsController {
         return mv;
     }
 
+    @GetMapping("comment/{id}")
+    public ModelAndView getComment(@PathVariable("id") String id) {
+        ModelAndView mv = new ModelAndView("post");
+        if (service.getComment(id).isPresent()) {
+            mv.addObject("postText", service.getComment(id).get().getText());
+            mv.addObject("buttontxt", "Homepage");
+            mv.addObject("postIdd",service.getComment(id).get().getId());
+            mv.addObject("comment", service.getComment(id));
+            log.info("found");
+        } else {
+            mv.addObject("buttontxt", "Homepage");
+            mv.addObject("postText", null);
+            log.info("Not found :(");
+        }
+        return mv;
+    }
 
     @PostMapping("{id}/create-comment/new-comment")
     @Transactional

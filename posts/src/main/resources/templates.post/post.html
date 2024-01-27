@@ -125,9 +125,10 @@
     <textarea class="txtarea" id="txtarea"></textarea>
       <table class="post-table" id="post-table">
         <tbody>
+        <a id="create-comment" href="#"></a>
         <tr th:each="comment : ${comment}">
-          <td th:text="${comment.getSubText()}" style="cursor: pointer; text-decoration: underline;"></td>
-          <td th:text="${comment.author}" style="cursor: pointer; text-decoration: underline;"></td>
+          <td th:attr="data-comment=${comment.id}" th:text="${comment.getSubText()}" style="cursor: pointer; text-decoration: underline;"></td>
+          <td th:text="${comment.getAuthor}" style="cursor: pointer; text-decoration: underline;"></td>
         </tr>
         <a id="errorA" style="margin: 5px; font-size: 14px; color: crimson; display: none">No results...</a>
         </tbody>
@@ -145,6 +146,41 @@
   const errorText = "Could not find the post you're trying to reach"
   let postText = /*[[${postText}]]*/ 'default';
   const postTable = document.getElementById("post-table");
+  const commentText = document.getElementById("create-comment");
+
+  var user;
+  try {
+    var jwt = localStorage.getItem("jwt")
+    if (jwt === null || jwt === ""){
+      window.location = "/auth/login"
+    }
+  } catch (e) {
+    console.log(e)
+  }
+
+  fetch("/auth/get-claims/" + jwt, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+          .then(response => {
+            if (response.ok) {
+              return response.json();
+            } else {
+              console.error("Error:", response.status, response.statusText);
+              throw new Error("Bad response from server");
+            }
+          })
+          .then(data => {
+            user = data.username;
+            console.log(user)
+            document.getElementById("profileBtn").href = "/user/" + user;
+          })
+          .catch(error => {
+            console.error("Fetch error:", error);
+          });
+
 
 
   switch (btntxt) {
@@ -159,6 +195,10 @@
       } else {
         upvote.innerText = "Upvote";
         downvote.innerText = "Downvote"
+        commentText.innerText = "Create comment"
+        const url = window.location.href.split("/");
+        let postIdd = url.at(4)
+        commentText.href = postIdd + "/create-comment"
         textarea.innerText = postText;
         textarea.readOnly = true;
         postTable.style.display = "flex"
@@ -205,12 +245,13 @@
     function createPost() {
       let textToCreate = textarea.value;
       console.info(textToCreate);
+      console.log(user)
       fetch("create-post", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({text: textToCreate})
+        body: JSON.stringify({text: textToCreate,author: user})
       }).then(response => {
         if (response.status === 200) {
           location.href = "home";

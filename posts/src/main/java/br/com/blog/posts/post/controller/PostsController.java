@@ -1,7 +1,6 @@
 package br.com.blog.posts.post.controller;
 
 
-import br.com.blog.posts.comment.entity.Comment;
 import br.com.blog.posts.post.dto.EditDTO;
 import br.com.blog.posts.post.dto.PostDTO;
 import br.com.blog.posts.post.service.PostService;
@@ -9,8 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.util.List;
 
 
 @RestController
@@ -28,10 +25,10 @@ public class PostsController {
 
     //Thymeleaf endpoints
 
-    @GetMapping("/home")
-    public ModelAndView home(){
+    @GetMapping("/home/{page}")
+    public ModelAndView home(@PathVariable("page") int page){
         ModelAndView mv = new ModelAndView("home");
-        mv.addObject("post",service.listAllPosts());
+        mv.addObject("post",service.listAllPosts(page));
         return mv;
     }
 
@@ -48,7 +45,6 @@ public class PostsController {
         mv.addObject("post",service.listAllByDownvote());
         return mv;
     }
-
 
 
     @GetMapping("/create")
@@ -101,6 +97,14 @@ public class PostsController {
 
 
 
+    @GetMapping("/user/{author}")
+    public ModelAndView findByUser(@PathVariable("author") String author){
+        ModelAndView mv = new ModelAndView("profile");
+        mv.addObject("post",service.postsByUser(author));
+        return mv;
+    }
+
+
     //api endpoints
     @PostMapping("/create-post")
     @Transactional
@@ -139,13 +143,4 @@ public class PostsController {
         service.downvote(id);
     }
 
-    @GetMapping("teste")
-    public void teste(){
-        List<Comment> s = service.listAllCommentByPost("657dd42c95a65361a3695fb6");
-        for (Comment comment: s){
-            System.out.println(comment.getText());
-        }
-
-
-    }
 }
