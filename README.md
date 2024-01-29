@@ -12,6 +12,6 @@
 > Authentication with JWT
 > Secure endpoints with Spring Security
 
-![LoginPage](login-page.png)
+![LoginPage](https://ibb.co/phK1HRF)
 
-![Home](home-page.png)
+![Home](https://ibb.co/8XpCb3Z)
