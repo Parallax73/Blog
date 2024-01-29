@@ -4,31 +4,29 @@ package br.com.blog.posts.post.controller;
 import br.com.blog.posts.post.dto.EditDTO;
 import br.com.blog.posts.post.dto.PostDTO;
 import br.com.blog.posts.post.service.PostService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 
-@RestController
+@Controller
 @RequestMapping("/post")
 @Slf4j
+@RequiredArgsConstructor
 public class PostsController {
 
     final
     PostService service;
 
-
-    public PostsController(PostService service) {
-        this.service = service;
-    }
-
     //Thymeleaf endpoints
 
-    @GetMapping("/home/{page}")
-    public ModelAndView home(@PathVariable("page") int page){
+    @GetMapping("/home")
+    public ModelAndView home(/*@PathVariable("page") int page*/){
         ModelAndView mv = new ModelAndView("home");
-        mv.addObject("post",service.listAllPosts(page));
+        mv.addObject("post",service.listAllPosts(0));
         return mv;
     }
 

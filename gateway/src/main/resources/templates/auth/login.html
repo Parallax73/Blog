@@ -159,7 +159,7 @@
         }).then(data => {
             const jwtToken = data.access_token;
             localStorage.setItem("jwt", jwtToken)
-            window.location = "/post/home/0"
+            window.location = "/post/home"
         })
 
             .catch(e => {

@@ -188,7 +188,7 @@
         .then(data => {
             user = data.username;
             console.log(user)
-            document.getElementById("profileBtn").href = "/post/user/" + user;
+            document.getElementById("profileBtn").href = "/user/" + user;
         })
         .catch(error => {
             console.error("Fetch error:", error);

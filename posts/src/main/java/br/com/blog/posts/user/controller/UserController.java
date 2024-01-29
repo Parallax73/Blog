@@ -3,10 +3,11 @@ package br.com.blog.posts.user.controller;
 import br.com.blog.gateway.user.OptionsDTO;
 import br.com.blog.posts.user.service.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-@RestController
+@Controller
 @RequestMapping("/user")
 public class UserController {
 

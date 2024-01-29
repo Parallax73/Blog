@@ -209,12 +209,10 @@
             </div>
             <div class="post-div" style="border: 2px solid black; margin: 10px; width: 50vh; overflow: auto">
                 <table class="post-table" style="height: 100%">
-
                     <tbody>
                     <tr data-th-each="post : ${post}">
 
                         <td  th:href="" class="clickableCell" th:attr="data-post-id=${post.id}" data-th-text="${post.getSubText()}" style="cursor: pointer; text-decoration: underline;"></td>
-                        <td data-th-text="${post.author}" style="cursor: pointer; text-decoration: underline;"></td>
                         <td data-th-text="${post.getVoteCount()}" style="cursor: pointer; text-decoration: underline;"></td>
                         <td data-th-text="${post.dateTime}"></td>
                         <td>

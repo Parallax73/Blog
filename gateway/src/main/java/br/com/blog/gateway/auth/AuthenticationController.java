@@ -28,6 +28,8 @@ public class AuthenticationController {
         return new ModelAndView("register");
     }
 
+    //Api endpoints
+
     @PostMapping("/register-user")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
         return ResponseEntity.ok(service.register(request));
