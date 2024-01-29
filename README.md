@@ -15,3 +15,5 @@
 ![LoginPage](https://i.ibb.co/phK1HRF/login-page.png)
 
 ![Home](https://i.ibb.co/8XpCb3Z/home.png)
+
+Images with a higher resolution in the package images
