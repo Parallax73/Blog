@@ -48,11 +48,11 @@ public class AuthenticationService {
     var refreshToken = jwtService.generateRefreshToken(user);
     saveUserToken(savedUser, jwtToken);
     log.info("Tried to register a user");
-    /*if (request.getRole()== Role.USER) {
+    if (request.getRole()== Role.USER) {
       emailService.sendEmail(new Email(request.getEmail(),
               "Thanks for registering at our blog",
               "Welcome " + request.getUsername() + " ,thanks for creating an account on our blog, enjoy!!"));
-    }*/
+    }
     return AuthenticationResponse.builder()
             .accessToken(jwtToken)
             .build();
